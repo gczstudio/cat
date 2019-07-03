@@ -1,0 +1,10 @@
+.loadable-component {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFF;
+  .remind-text {
+    font-size: 50px;
+  }
+}

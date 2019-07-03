@@ -1,0 +1,46 @@
+.login-form-component{
+    .login-form-forgot {
+        float: right;
+    }
+    .login-form-button {
+        width: 100%;
+    }
+    .others-method{
+        .ant-divider-inner-text{
+            color: #b5b5b5;
+        }
+        .icons{
+            width: 282px;
+            margin: 0 auto;
+            .icon{
+                cursor: pointer;
+                padding: 20px;
+                font-size: 30px;
+                vertical-align: middle;
+                transition: all .2s;
+                &.icon-weibo{
+                    color: #e05244;
+                }
+                &.icon-wechat{
+                    color: #00bb29;
+                }
+                &.icon-qq{
+                    color: #498ad5;
+                }
+                &:hover{
+                    opacity: 0.5;
+                }
+            }
+            .other-text{
+                cursor: pointer;
+                transition: all .2s;
+                color: #999;
+                padding: 20px;
+                &:hover{
+                    opacity: 0.5;
+                }
+            }
+        }   
+        
+    }
+}

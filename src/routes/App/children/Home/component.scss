@@ -1,0 +1,18 @@
+.home-component{
+    height: 100%;
+    .content{
+        min-height: calc(100% - 110px);
+        .main{
+            float: left;
+            width: 625px;
+            // background: pink;
+        }
+        .aside{
+            float: right;
+            width: 280px;
+            height: 50px;
+            // background: blue;
+        }
+       
+    }
+}

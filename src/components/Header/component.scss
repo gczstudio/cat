@@ -1,0 +1,80 @@
+.header-component{
+    position: fixed;
+    width: 100%;
+    .small-header{
+        height: 3px;
+        background: rgba(0,0,0,0.8);
+    }
+    .big-header{
+        height: 80px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        .content{
+            width: 1440px;
+            margin: 0 auto;
+            .logo{
+                float: left;
+                width: 80px;
+                padding-top: 20px;
+                cursor: pointer;
+                img{
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                }
+            }
+            .header-center{
+                width: 960px;
+                margin: 0 auto;
+                .nav{
+                    ul>li{
+                        float: left;
+                        height: 80px;
+                        line-height: 80px;
+                        padding: 0 20px;
+                        transition: all .2s;
+                        cursor: pointer;
+                        &.active, &:hover{
+                            color: #ff7700;
+                        }
+                        
+                    }
+                }
+                .search{
+                    line-height: 80px;
+                }
+            }
+            
+            .login{
+                float: right;
+                line-height: 80px;
+                margin-top: -80px;
+                .avatar{
+                    margin-right: 20px;
+                    img{
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        transition: all .2s;
+                        cursor: pointer;
+                        border: 2px solid #fff;
+                        &:hover{
+                            border-color: #ff7700;
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+}
+
+.ant-dropdown-menu-item, .ant-dropdown-menu-submenu-title{
+    padding: 10px 20px;
+    line-height: 30px;
+    i{
+        font-size: 16px;
+        margin-right: 15px;
+        color: #ff7700;
+    }
+}
