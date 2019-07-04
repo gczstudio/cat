@@ -24,9 +24,9 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        let { type } = this.props.location.state;
+        let { state } = this.props.location;
         this.setState({
-            isActive: type
+            isActive: state&&state.type ? state.type:1
         })
     }
 

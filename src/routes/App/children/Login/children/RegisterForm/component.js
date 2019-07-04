@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import './component.scss'
-import { Form, Icon, Input, Button, Checkbox, Divider } from 'antd';
-
+import { Form, Icon, Input, Button, Divider, message } from 'antd';
+import axios from 'utils/axios'
+import { withRouter} from 'react-router-dom'
 const { Item } = Form;
 
 class RegisterForm extends Component {
@@ -17,6 +18,15 @@ class RegisterForm extends Component {
         this.props.form.validateFields((err, values) => {
           if (!err) {
             console.log('Received values of form: ', values);
+            axios.post('/user/register', values).then( (response)=> {
+                console.log(response, 22222222222)
+                message.success('注册成功！')
+                window.location.reload();
+            })
+            .catch( (error)=> {
+                console.log(error);
+            });
+    
           }
         });
     };
@@ -42,7 +52,7 @@ class RegisterForm extends Component {
                         )}
                     </Item>
                     <Item>
-                        {getFieldDecorator('phone', {
+                        {getFieldDecorator('mobile', {
                             rules: [{ required: true, message: '请输入手机号!' }],
                         })(
                             <Input
@@ -84,4 +94,4 @@ class RegisterForm extends Component {
 }
 const WrappedRegisterForm = Form.create({ name: 'normal_register' })(RegisterForm);
 
-export default WrappedRegisterForm
+export default withRouter(WrappedRegisterForm)

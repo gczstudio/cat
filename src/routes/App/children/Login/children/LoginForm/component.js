@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import './component.scss'
-import { Form, Icon, Input, Button, Checkbox, Divider } from 'antd';
-
+import { Form, Icon, Input, Button, Checkbox, Divider, message } from 'antd';
+import { withRouter } from 'react-router-dom'
+import axios from 'utils/axios'
 const { Item } = Form;
 
 class LoginForm extends Component {
@@ -17,6 +18,11 @@ class LoginForm extends Component {
         this.props.form.validateFields((err, values) => {
           if (!err) {
             console.log('Received values of form: ', values);
+            axios.post('/user/login', values).then((data)=>{
+                console.log(data,22)
+                message.success('登录成功！');
+                this.props.history.push('/');
+            })  
           }
         });
     };
@@ -81,4 +87,4 @@ class LoginForm extends Component {
 }
 const WrappedLoginForm = Form.create({ name: 'normal_login' })(LoginForm);
 
-export default WrappedLoginForm
+export default withRouter(WrappedLoginForm)

@@ -2,9 +2,10 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var session = require('express-session')
 var logger = require('morgan');
 
-var loginRotuer = require('./routes/login');
+var userRotuer = require('./routes/user');
 
 var app = express();
 
@@ -13,20 +14,29 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  secret: 'dfsfsfrwrwere',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    maxAge: 60000
+  }
+}))
 
-// app.use('/', function(req, res){
-//   res.end('hello');
-// });
+app.all('/api/*', function(req, res, next){
+  next();
+});
+
 
 app.get('/', function (req, res) {
   res.send('hello world')
+  console.log(req.cookie)
+  console.log(req.signedCookies)
 })
 
-app.use('/login',loginRotuer)
 
-app.get('/login', function (req, res) {
-  res.send('login')
-})
+app.use('/api/user',userRotuer)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,6 +53,19 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+//生产环境
+
+if(process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, '../build')));
+  // Handle React routing, return all requests to React app
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  });
+}
+
 
 
 app.listen(5000,function(){
