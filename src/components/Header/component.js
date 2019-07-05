@@ -4,39 +4,51 @@ import logo from 'public/images/logo.png'
 import avatar from './images/logo.jpeg'
 import { withRouter, Link } from 'react-router-dom'
 import { Input, Button, Menu, Dropdown, Icon } from 'antd';
-
+import axios from 'utils/axios'
 const { Search } = Input;
 const { Item } = Menu;
 
-const menu = (
-    <Menu>
-    <Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-            <Icon type="home" theme="filled" />
-            我的主页
-        </a>
-      </Item>
-      <Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-            <Icon type="setting" theme="filled" />
-            设置
-        </a>
-      </Item>
-      <Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-            <i className="iconfont">&#xe659;</i>
-            退出
-        </a>
-      </Item>
-    </Menu>
-  );
 
 class Header extends Component {
     constructor(props){
         super(props)
         this.state = {
-
+            userInfo: {}
         }
+
+        this.menu = (
+            <Menu>
+            <Item>
+                <span>
+                    <Icon type="home" theme="filled" />
+                    我的主页
+                </span>
+              </Item>
+              <Item>
+                <span>
+                    <Icon type="setting" theme="filled" />
+                    设置
+                </span>
+              </Item>
+              <Item>
+                <span onClick={this.onLogoutHandler}>
+                    <i className="iconfont">&#xe659;</i>
+                    退出
+                </span>
+              </Item>
+            </Menu>
+          );
+    }
+
+    onLogoutHandler = () => {
+        console.log(111111111111)
+        axios.get('/user/logout').then( (response)=> {
+            console.log(response)
+            this.props.history.push('/login');
+        })
+        .catch( (error)=> {
+            console.log(error);
+        });
     }
 
     goLoginHandler = (type) => {
@@ -48,11 +60,25 @@ class Header extends Component {
         });
     }
 
-    componentDidMount() {
+    getUserInfo = () => {
+        axios.post('/dashboard/userInfo',{
+            username: localStorage.getItem('username')
+        }).then( (response)=> {
+           this.setState({
+               userInfo: response.data
+           })
+        })
+        .catch( (error)=> {
+            console.log(error);
+        });
+    }
 
+    componentDidMount() {
+        this.getUserInfo();
     }
 
     render () {
+        let { userInfo } = this.state;
         return (
             <div className="header-component">
                 <div className="small-header"></div>
@@ -76,13 +102,22 @@ class Header extends Component {
                             </div>
                         </div>
                         <div className="login">
-                            <div className="avatar fl">
-                                <Dropdown overlay={menu}>
-                                    <img src={avatar} alt=""/>
-                                </Dropdown>
-                            </div>
-                            <Button type="primary" shape="round"  onClick={()=>this.goLoginHandler(1)}>登录</Button>
-                            <Button type="link" onClick={()=>this.goLoginHandler(2)}>注册</Button>
+                            {
+                                userInfo.user_name ?
+                                <div className="avatar fl">
+                                    <Dropdown overlay={this.menu}>
+                                        <img src={avatar} alt=""/>
+                                    </Dropdown>
+                                </div>
+                                :
+                                <div>
+                                    <Button type="primary" shape="round"  onClick={()=>this.goLoginHandler(1)}>登录</Button>
+                                    <Button type="link" onClick={()=>this.goLoginHandler(2)}>注册</Button>
+                                </div>
+                            }
+                            
+                            
+                            
                         </div>
                     </div>
                 </div>

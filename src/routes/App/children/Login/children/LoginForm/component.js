@@ -17,9 +17,9 @@ class LoginForm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
             axios.post('/user/login', values).then((data)=>{
-                console.log(data,22)
+                this.props.getLoginUserInfo(data.data);
+                localStorage.setItem('username',data.data.user_name)
                 message.success('登录成功！');
                 this.props.history.push('/');
             })  
@@ -28,7 +28,7 @@ class LoginForm extends Component {
     };
 
     componentDidMount() {
-
+        console.log(this.props,11111111)
     }
 
     render () {

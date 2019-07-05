@@ -6,6 +6,7 @@ var session = require('express-session')
 var logger = require('morgan');
 
 var userRotuer = require('./routes/user');
+var dashboardRotuer = require('./routes/dashboard');
 
 var app = express();
 
@@ -19,13 +20,20 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    maxAge: 60000
+    maxAge: 60*1000
   }
 }))
 
+
 app.all('/api/*', function(req, res, next){
+  //解决session 刷新失效的问题
+  res.header("Access-Control-Allow-Origin", req.headers.origin)
+  res.header('Access-Control-Allow-Credentials', 'true')
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
   next();
-});
+})
+
+
 
 
 app.get('/', function (req, res) {
@@ -35,7 +43,10 @@ app.get('/', function (req, res) {
 })
 
 
-app.use('/api/user',userRotuer)
+app.use('/api/user',userRotuer);
+
+app.use('/api/dashboard',dashboardRotuer);
+
 
 
 // catch 404 and forward to error handler

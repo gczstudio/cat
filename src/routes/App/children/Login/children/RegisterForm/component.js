@@ -19,8 +19,13 @@ class RegisterForm extends Component {
           if (!err) {
             console.log('Received values of form: ', values);
             axios.post('/user/register', values).then( (response)=> {
-                console.log(response, 22222222222)
                 message.success('注册成功！')
+                this.props.history.push({
+                    pathname: '/login',
+                    state: {
+                        type: 1
+                    }
+                });
                 window.location.reload();
             })
             .catch( (error)=> {

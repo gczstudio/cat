@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { CONSOLE_REQUEST_ENABLE, CONSOLE_RESPONSE_ENABLE } from 'config/index';
-
+import { message } from 'antd';
 const CancelToken = axios.CancelToken;
 let CancelPromise = {};
 
@@ -43,11 +43,12 @@ export function requestFailFunc(reqError) {
 export function responseSuccessFunc(response) {
   // 自定义响应成功逻辑，全局拦截接口，根据不同业务做不同处理，响应成功监控等
   CONSOLE_RESPONSE_ENABLE && console.info('responseInterceptorFunc', response);
-  if (response && response.data.code === 200) {
+  if (response && response.data.success) {
     return response.data;
   } else {
     // 异常处理
     console.log('warning', response.data.msg);
+    message.error(response.data.msg);
     return Promise.reject(
       'error：' + (response && response.data && response.data.msg)
     );
