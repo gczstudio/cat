@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import './component.scss'
 import { Form, Icon, Input, Button, Divider, message } from 'antd';
 import axios from 'utils/axios'
+import CryptoJS from 'crypto-js'
 import { withRouter} from 'react-router-dom'
 const { Item } = Form;
+
 
 class RegisterForm extends Component {
     constructor(props){
@@ -17,16 +19,14 @@ class RegisterForm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
+            values.password = CryptoJS.AES.encrypt(values.password, '1234567890').toString();
             console.log('Received values of form: ', values);
             axios.post('/user/register', values).then( (response)=> {
                 message.success('注册成功！')
-                this.props.history.push({
-                    pathname: '/login',
-                    state: {
-                        type: 1
-                    }
-                });
-                window.location.reload();
+                this.props.getLoginType({
+                    type: 1
+                })
+                localStorage.setItem('username',response.data.username);
             })
             .catch( (error)=> {
                 console.log(error);
@@ -42,6 +42,16 @@ class RegisterForm extends Component {
 
     render () {
         const { getFieldDecorator } = this.props.form;
+        const phoneValidator = function(rule, value, callback){
+            let reg = /^1[3456789]\d{9}$/;
+            if(value === ''){
+                callback('请输入手机号！')
+            }else if(!reg.test(value)){
+                callback('请输入正确的手机号！')
+            }else{
+                callback();
+            }
+        }
         return (
             <div className="register-form-component">
                 <Form onSubmit={this.handleSubmit} className="register-form">
@@ -58,7 +68,7 @@ class RegisterForm extends Component {
                     </Item>
                     <Item>
                         {getFieldDecorator('mobile', {
-                            rules: [{ required: true, message: '请输入手机号!' }],
+                            rules: [{ required: true, validator: phoneValidator}],
                         })(
                             <Input
                             prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />}

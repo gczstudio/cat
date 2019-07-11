@@ -5,6 +5,12 @@
     .login-form-button {
         width: 100%;
     }
+    .ant-input-group-addon{
+        padding: 0;
+    }
+    .svg-captcha{
+        cursor: pointer;
+    }
     .others-method{
         .ant-divider-inner-text{
             color: #b5b5b5;

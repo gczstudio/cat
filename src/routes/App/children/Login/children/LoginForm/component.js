@@ -3,13 +3,16 @@ import './component.scss'
 import { Form, Icon, Input, Button, Checkbox, Divider, message } from 'antd';
 import { withRouter } from 'react-router-dom'
 import axios from 'utils/axios'
+import Cookies from 'js-cookie'
+import CryptoJS from 'crypto-js'
+
 const { Item } = Form;
 
 class LoginForm extends Component {
     constructor(props){
         super(props)
         this.state = {
-
+            loginError: false
         }
     }
 
@@ -17,7 +20,21 @@ class LoginForm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
+            if(values.remember){
+                Cookies.set('username',values.username)
+            }else{
+                Cookies.remove('username')
+            }
+            values.password = CryptoJS.AES.encrypt(values.password, '1234567890').toString();
             axios.post('/user/login', values).then((data)=>{
+                if(data.msg){
+                    this.setState({
+                        loginError: true
+                    })
+                    message.error(data.msg);
+                    this.getCaptcha();
+                    return;
+                }
                 this.props.getLoginUserInfo(data.data);
                 localStorage.setItem('username',data.data.user_name)
                 message.success('登录成功！');
@@ -27,14 +44,30 @@ class LoginForm extends Component {
         });
     };
 
+    getCaptcha = ()=>{
+        if(!this.state.loginError) return;
+        axios.get('/user/captcha').then((data)=>{
+            this.svg.innerHTML = data.data
+        })  
+    }
+
+    componentWillReceiveProps(nextProps){
+
+    }
+
     componentDidMount() {
-        console.log(this.props,11111111)
+        let username = Cookies.get('username');
+        this.props.form.setFieldsValue({
+            username
+        });
+        this.getCaptcha();
     }
 
     render () {
         const { getFieldDecorator } = this.props.form;
         return (
             <div className="login-form-component">
+                
                 <Form onSubmit={this.handleSubmit} className="login-form">
                     <Item>
                         {getFieldDecorator('username', {
@@ -59,11 +92,29 @@ class LoginForm extends Component {
                             />,
                         )}
                     </Item>
+                    
+                    {
+                        this.state.loginError ? 
+                        <Item>
+                            {getFieldDecorator('captcha', {
+                                rules: [{ required: true, message: '请输入验证码!' }],
+                            })(
+                                <Input
+                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                type="captcha"
+                                size="large"
+                                placeholder="验证码"
+                                addonAfter={<div className="svg-captcha" ref={svg=> this.svg = svg } onClick={this.getCaptcha}></div>}
+                                />,
+                            )}
+                        </Item>
+                        : ''
+                    }
                     <Item>
                         {getFieldDecorator('remember', {
                             valuePropName: 'checked',
                             initialValue: true,
-                        })(<Checkbox>记住密码</Checkbox>)}
+                        })(<Checkbox>记住用户</Checkbox>)}
                         <a className="login-form-forgot" href="xxx">
                             忘记密码
                         </a>

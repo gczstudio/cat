@@ -5,7 +5,10 @@ var async = require('async')
 
 //获取用户信息
 router.post('/userInfo', function(req, res, next) {
-    if(req.session&&req.session.user){
+    console.log(req.cookies['connect.sid'],11111)
+    console.log(req.sessionID,22222)
+    let sessionId = req.cookies['connect.sid'];
+    if(req.session&&req.session.user&& (req.sessionID === sessionId.slice(2, sessionId.indexOf('.')))){
         let { username } = req.body;
         const sql = db.connection();
         let  addSql = `SELECT * from users WHERE BINARY user_name='${username}'`;
@@ -14,6 +17,7 @@ router.post('/userInfo', function(req, res, next) {
             console.log('[SELECT ERROR] - ',err.message);
             return;
         }
+        console.log(result,22222222)
         res.status(200).send({
             success: true,
             data: result[0]

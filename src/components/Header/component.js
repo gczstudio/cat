@@ -30,8 +30,8 @@ class Header extends Component {
                     设置
                 </span>
               </Item>
-              <Item>
-                <span onClick={this.onLogoutHandler}>
+              <Item  onClick={this.onLogoutHandler}>
+                <span>
                     <i className="iconfont">&#xe659;</i>
                     退出
                 </span>
@@ -65,7 +65,7 @@ class Header extends Component {
             username: localStorage.getItem('username')
         }).then( (response)=> {
            this.setState({
-               userInfo: response.data
+               userInfo: response.data || {}
            })
         })
         .catch( (error)=> {

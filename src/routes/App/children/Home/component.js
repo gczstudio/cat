@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './component.scss'
 import Header from 'components/Header/index'
-import List from './children/List/index'
+import NoteList from './children/NoteList'
 import { BrowserRouter as Router, Route } from "react-router-dom";
 class Home extends Component {
     constructor(props){
@@ -19,11 +19,11 @@ class Home extends Component {
         return (
             <div className="home-component clearfix">
                 <Header />
-                <div className="content w">
+                <div className="content w clearfix">
                     <div className="main">
-                        <List />
+                        <NoteList />
                     </div>
-                    <div className="aside"></div>
+                    {/*<div className="aside"></div> */}
                 </div>
             </div>
         )

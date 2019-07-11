@@ -9,7 +9,7 @@ class Login extends Component {
     constructor(props){
         super(props)
         this.state = {
-            isActive: 1
+
         }
     }
 
@@ -18,20 +18,25 @@ class Login extends Component {
     }
 
     onTabChangeHandler = (index) => {
-        this.setState({
-            isActive: index
+        this.props.getLoginType({
+            type: index
         })
     }
 
+    componentWillReceiveProps() {
+        console.log(23122)
+
+    }
+
     componentDidMount() {
-        let { state } = this.props.location;
-        this.setState({
-            isActive: state&&state.type ? state.type:1
+        let { state } = this.props.location
+        this.props.getLoginType({
+            type: state&&state.type?state.type : 1
         })
     }
 
     render () {
-        let { isActive } = this.state;
+        let { loginType } = this.props;
         return (
             <div className="login-component">
                 <div className="login-header">
@@ -42,11 +47,11 @@ class Login extends Component {
                     <div className="content">
                         <div className="login-box">
                             <div className="tabs">
-                                <span className={isActive === 1?'active':''} onClick={()=>this.onTabChangeHandler(1)}>登录</span>
-                                <span className={isActive === 2?'active':''} onClick={()=>this.onTabChangeHandler(2)}>注册</span>
+                                <span className={loginType.type === 1?'active':''} onClick={()=>this.onTabChangeHandler(1)}>登录</span>
+                                <span className={loginType.type === 2?'active':''} onClick={()=>this.onTabChangeHandler(2)}>注册</span>
                             </div>
                             {
-                                isActive === 1 ? <LoginForm /> : <RegisterForm />
+                                loginType.type === 1 ? <LoginForm /> : <RegisterForm />
                             }
                             
                             

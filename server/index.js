@@ -3,33 +3,41 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var session = require('express-session')
+var RedisStore = require('connect-redis')(session);
 var logger = require('morgan');
 
 var userRotuer = require('./routes/user');
 var dashboardRotuer = require('./routes/dashboard');
+var notesRotuer = require('./routes/notes');
+require('./utils/easyBook')  //从简书拉取数据
 
 var app = express();
 
+const redisoOptions = {
+  host: 'localhost', 
+  port: 6379
+}
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-  secret: 'dfsfsfrwrwere',
+  store: new RedisStore(redisoOptions),
+  secret: 'xSqdR4yzyhESjwhqThQvTglrFimm1OtFKLOl05JZO1FQpZEuLsO79TsKCGVobMCh5Ul3eQM8Xfg2eI5VYsQA7tJovwxF0CUUFRaaqpUXU6hPQQFHeyUwHBhNGzPD2L1D',  //128位随机字符串
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: { 
-    maxAge: 60*1000
+    maxAge: 24*60*60*1000
   }
 }))
 
 
 app.all('/api/*', function(req, res, next){
   //解决session 刷新失效的问题
-  res.header("Access-Control-Allow-Origin", req.headers.origin)
-  res.header('Access-Control-Allow-Credentials', 'true')
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  // res.header("Access-Control-Allow-Origin", req.headers.origin)
+  // res.header('Access-Control-Allow-Credentials', 'true')
+  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
   next();
 })
 
@@ -46,6 +54,7 @@ app.get('/', function (req, res) {
 app.use('/api/user',userRotuer);
 
 app.use('/api/dashboard',dashboardRotuer);
+app.use('/api/notes',notesRotuer);
 
 
 
