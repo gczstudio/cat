@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './component.scss'
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Loadable from 'components/Loadable';
+import Loadable from 'components/Loadable/index';
 
 const Home = Loadable(import('./children/Home/index'));
 const Login = Loadable(import('./children/Login/index'));

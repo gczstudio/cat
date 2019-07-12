@@ -40,7 +40,6 @@ function requestConent($){
             nick_name = el.find('.nickname').text(),
             comments = el.find('.ic-list-comments').parent().text(), 
             likes = el.find('.ic-list-like').parent().text();
-            console.log(title, detail_url, img_url, abstract, js_meta, nick_name, comments, likes)
         //插入数据库
         
         let  addSql = `INSERT INTO notes(title, detail_url, img_url, abstract, js_meta, nick_name, comments, likes) VALUES(?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE title=title`;
@@ -50,20 +49,12 @@ function requestConent($){
                 console.log('[SELECT ERROR] - ',err.message);
                 return;
             }
-            console.log(result,'zhixinx')
         })
-
-        //保存图片到本地
-        // savedImg(img_url)
     })
     db.close(sql);
         
 }
 
 function sendConent(url){
-    
-}
-
-function savedImg($){
     
 }

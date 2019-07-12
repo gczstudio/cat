@@ -1,12 +1,9 @@
 const mysql = require('mysql');
+const CONFIG = require('../config')
+
 let db = {};
 db.connection = function () {
-    let connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '123456',
-        database: 'cat'
-    });
+    let connection = mysql.createConnection(CONFIG.MYSQL_CONFIG);
     //数据库连接
     connection.connect(function(err){
         if(err){

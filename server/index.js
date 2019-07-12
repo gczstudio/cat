@@ -9,21 +9,17 @@ var logger = require('morgan');
 var userRotuer = require('./routes/user');
 var dashboardRotuer = require('./routes/dashboard');
 var notesRotuer = require('./routes/notes');
+const CONFIG = require('./config')
 require('./utils/easyBook')  //从简书拉取数据
 
 var app = express();
-
-const redisoOptions = {
-  host: 'localhost', 
-  port: 6379
-}
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-  store: new RedisStore(redisoOptions),
+  store: new RedisStore(CONFIG.REDIS_CONFIG),
   secret: 'xSqdR4yzyhESjwhqThQvTglrFimm1OtFKLOl05JZO1FQpZEuLsO79TsKCGVobMCh5Ul3eQM8Xfg2eI5VYsQA7tJovwxF0CUUFRaaqpUXU6hPQQFHeyUwHBhNGzPD2L1D',  //128位随机字符串
   resave: false,
   saveUninitialized: true,
